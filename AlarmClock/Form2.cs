@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 
 namespace AlarmClock
@@ -19,23 +20,29 @@ namespace AlarmClock
         public int returnedMinute { get; set; }
         public int returnedSecond { get; set; }
         public string alarmEnabled { get; set; }
+        public int snoozeTime { get; set; }
+        public AlarmSounds sound { get; set; }
 
-        public AddEditForm (DateTime inputDateTime, String inputEnabled)
+        public AddEditForm (DateTime inputDateTime, String inputEnabled, AlarmSounds inputSound, int inputSnooze)
         {
              InitializeComponent();
-             this.dateTimePicker.Value = inputDateTime;
+            populateList();
+            this.dateTimePicker.Value = inputDateTime;
+            this.soundList.SelectedItem = inputSound;
+            this.snoozeTimer.Value = inputSnooze;
 
             if(inputEnabled=="on")
             {
                 this.onCheckBox.Checked = true;
             }
-             
+            
         }
 
 
         public AddEditForm()
         {
             InitializeComponent();
+            populateList();
         }
 
         private void setButton_Click(object sender, EventArgs e)
@@ -46,6 +53,8 @@ namespace AlarmClock
             this.returnedHour = dateTimePicker.Value.Hour;
             this.returnedMinute = dateTimePicker.Value.Minute;
             this.returnedSecond = dateTimePicker.Value.Second;
+            this.snoozeTime = Convert.ToInt32(snoozeTimer.Value);
+            this.sound = (AlarmSounds)soundList.SelectedItem;
 
             if( onCheckBox.Checked == true)
             {
@@ -64,6 +73,11 @@ namespace AlarmClock
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        public void populateList()
+        {
+            soundList.Items.AddRange(typeof(AlarmSounds).GetEnumNames());
         }
     }
 }

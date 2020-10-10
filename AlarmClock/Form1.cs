@@ -15,18 +15,28 @@ namespace AlarmClock
     {
         Timer[] timerArray;
         int count;
+        int snoozeTiming;
+        AlarmSounds sound;
+        public delegate void FileManageDel(ListBox x, int y, Button button);
+        private FileManageDel ReadFunction;
+        private FileManageDel SaveFunction;
 
         public Form1()
         {
             InitializeComponent();
             timerArray = new Timer[10];
             count = 0;
-
-            readFile();
-
+            ReadFunction = FileManage.Read;
+            ReadFunction(listBox, count, editButton);
         }
 
         private void saveToFile()
+        {
+            SaveFunction = FileManage.Save;
+            SaveFunction(listBox,count,editButton);
+        }
+
+       /* private void saveToFile()
         {
             using (StreamWriter sw = new StreamWriter("AlarmsData.txt"))
             {
@@ -51,10 +61,31 @@ namespace AlarmClock
                     while ((line = sr.ReadLine()) != null)
                     {
                         Console.WriteLine(line);
+                        string[] splits = line.Split(' ');
+                        DateTime mySavedTime = DateTime.Parse(splits[0]);
+                        String mySavedEnabled = splits[1];
+                        AlarmSounds mySavedSound = AlarmSounds.Radar;
+                        switch (splits[2])
+                        {
+                            case "Radar":
+                                mySavedSound = AlarmSounds.Radar;
+                                break;
+                            case "Beacon":
+                                mySavedSound = AlarmSounds.Beacon;
+                                break;
+                            case "Chimes":
+                                mySavedSound = AlarmSounds.Chimes;
+                                break;
+                            case "Circuit":
+                                mySavedSound = AlarmSounds.Circuit;
+                                break;
+                            case "Reflection":
+                                mySavedSound = AlarmSounds.Reflection;
+                                break;
+                        }
+                        int mySavedSnooze = int.Parse(line);
 
-                        DateTime mySavedTime = DateTime.Parse(line);
-
-                        AlarmObject myObject = new AlarmObject(mySavedTime, "off");
+                        AlarmObject myObject = new AlarmObject(mySavedTime, "off", mySavedSound, mySavedSnooze);
                         listBox.Items.Add(myObject);
                         count++;
 
@@ -67,12 +98,12 @@ namespace AlarmClock
             {
 
             }
-        }
+        }*/
 
 
         private void OnTimerEvent(object sender, EventArgs e)
         {
-            this.outputLabel.Text = "Alarm went off";
+            this.outputLabel.Text = "Alarm has gone off. Sound Playing: " + sound.ToString();
 
             snoozeButton.Enabled = true;
             stopButton.Enabled = true;
@@ -81,14 +112,17 @@ namespace AlarmClock
 
         private void plusButton_Click(object sender, EventArgs e)
         {
-            using (var form = new AddEditForm())
+            AddEditForm form = new AddEditForm();
+            using (form)
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    
+                    form.populateList();
+                    sound = form.sound;
+                    snoozeTiming = form.snoozeTime;
                     DateTime input = new DateTime(form.returnedYear, form.returnedMonth, form.returnedDay, form.returnedHour, form.returnedMinute, form.returnedSecond);
-                    AlarmObject myObject = new AlarmObject(input, form.alarmEnabled);
+                    AlarmObject myObject = new AlarmObject(input, form.alarmEnabled, sound, snoozeTiming);
 
                     listBox.Items.Add(myObject);
 
@@ -126,7 +160,6 @@ namespace AlarmClock
                     count++;
                     
                     editButton.Enabled = true;
-
                     saveToFile();
 
                     if (count == 10)
@@ -145,13 +178,15 @@ namespace AlarmClock
             if(selectedIndex!=-1)
             {
                 AlarmObject myObject = (AlarmObject)listBox.SelectedItem;
-                using (var form = new AddEditForm(myObject.getTargetTime(), myObject.getEnabled()))
+                using (var form = new AddEditForm(myObject.getTargetTime(), myObject.getEnabled(), myObject.getSound(), myObject.getSnooze()))
                 {
                     var result = form.ShowDialog();
 
                     if (result == DialogResult.OK)
                     {
                         DateTime targetTime = new DateTime(form.returnedYear, form.returnedMonth, form.returnedDay, form.returnedHour, form.returnedMinute, form.returnedSecond);
+                        AlarmSounds targetSound = form.sound;
+                        int targetSnoozeTime = form.snoozeTime;
                        
                         if (timerArray[selectedIndex] != null)
                         {
@@ -163,6 +198,9 @@ namespace AlarmClock
 
                         myObject.setTargetTime(targetTime);
                         myObject.setEnabled(form.alarmEnabled);
+                        myObject.setSound(targetSound);
+                        myObject.setSnooze(targetSnoozeTime);
+
 
                         listBox.Items.RemoveAt(selectedIndex);
                         listBox.Items.Insert(selectedIndex, myObject);
@@ -177,11 +215,21 @@ namespace AlarmClock
 
                             int milliseconds = (int)ts.TotalMilliseconds;
 
+                            int snooze = form.snoozeTime;
+
                             if (milliseconds < 0)
                             {
                                 errorLabel.Text = "The selected alarm date has to be later than the current date";
                                 return;
                             }
+
+                            if (snooze < 0 && snooze > 30)
+                            {
+                                errorLabel.Text = "The selected snooze time has to be between 0 and 30 seconds";
+                                return;
+                            }
+
+
 
                             this.outputLabel.Text = "Status : Alarm is Running ";
 
@@ -214,10 +262,10 @@ namespace AlarmClock
             {
                 if(timerArray[index]!=null)
                 {
-                    Console.WriteLine(" Alarm " + index + "is not null");
+                    Console.WriteLine(" Alarm " + (index + 1) + "is not null");
                     if(timerArray[index].Enabled == true)
                     {
-                        Console.WriteLine(" Alarm " + index + "is enabled");
+                        Console.WriteLine(" Alarm " + (index + 1) + "is enabled");
 
                         AlarmObject myObject = (AlarmObject)listBox.Items[index];
                         if (DateTime.Compare(DateTime.Now, myObject.getTargetTime()) >= 0)
@@ -229,7 +277,8 @@ namespace AlarmClock
 
                             listBox.Items.RemoveAt(index);
                             listBox.Items.Insert(index, myObject);
-                            saveToFile();
+                            SaveFunction = FileManage.Save;
+                            SaveFunction(listBox,count,editButton);
 
                         }
                     }
@@ -248,8 +297,8 @@ namespace AlarmClock
                         AlarmObject myObject = (AlarmObject)listBox.Items[index];
                         if (DateTime.Compare(DateTime.Now, myObject.getTargetTime()) >= 0)
                         {
-                            timerArray[index].Interval = 30000;
-                            outputLabel.Text = "Status : alarm is snoozed for 30 seconds";
+                            timerArray[index].Interval = Convert.ToInt32(snoozeTiming);
+                            outputLabel.Text = "Status: alarm is snoozed for " + myObject.getSnooze() + " seconds";
 
                         }
                         
