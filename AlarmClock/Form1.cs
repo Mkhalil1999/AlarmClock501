@@ -43,7 +43,7 @@ namespace AlarmClock
                 foreach (object item in listBox.Items)
                 {
                     AlarmObject myObject = (AlarmObject)item;
-                    sw.WriteLine(myObject.getAlarmDetails());
+                    sw.WriteLine(myObject.getAlarmDetails())
                 } 
 
                 

@@ -72,7 +72,7 @@ namespace AlarmClock
             }
             catch (Exception e)
             {
-
+                //MessageBox.Show("Somehting went wrong");
             }
         }
 

@@ -20,7 +20,7 @@ namespace AlarmClock
         {
             targetTime = inputDateTime;
         }
-        //Set on/off
+        //Set on/off.
         private String enabled;
 
         public String getEnabled()

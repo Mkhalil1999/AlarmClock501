@@ -54,7 +54,7 @@ namespace AlarmClock
             this.returnedMinute = dateTimePicker.Value.Minute;
             this.returnedSecond = dateTimePicker.Value.Second;
             this.snoozeTime = Convert.ToInt32(snoozeTimer.Value);
-            //this.sound = (AlarmSounds)soundList.SelectedItem;
+            //this.sound = (AlarmSounds)soundList.SelectedItem
             var sName = soundList.SelectedItem.ToString();
 
             switch (sName)
