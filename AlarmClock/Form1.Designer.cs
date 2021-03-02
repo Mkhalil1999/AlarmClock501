@@ -41,7 +41,7 @@
             // 
             this.editButton.Enabled = false;
             this.editButton.Location = new System.Drawing.Point(27, 24);
-            this.editButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.editButton.Margin = new System.Windows.Forms.Padding(2);
             this.editButton.Name = "editButton";
             this.editButton.Size = new System.Drawing.Size(56, 32);
             this.editButton.TabIndex = 0;
@@ -52,7 +52,7 @@
             // plusButton
             // 
             this.plusButton.Location = new System.Drawing.Point(212, 24);
-            this.plusButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.plusButton.Margin = new System.Windows.Forms.Padding(2);
             this.plusButton.Name = "plusButton";
             this.plusButton.Size = new System.Drawing.Size(56, 32);
             this.plusButton.TabIndex = 1;
@@ -64,7 +64,7 @@
             // 
             this.snoozeButton.Enabled = false;
             this.snoozeButton.Location = new System.Drawing.Point(27, 341);
-            this.snoozeButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.snoozeButton.Margin = new System.Windows.Forms.Padding(2);
             this.snoozeButton.Name = "snoozeButton";
             this.snoozeButton.Size = new System.Drawing.Size(56, 32);
             this.snoozeButton.TabIndex = 2;
@@ -76,7 +76,7 @@
             // 
             this.stopButton.Enabled = false;
             this.stopButton.Location = new System.Drawing.Point(212, 341);
-            this.stopButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.stopButton.Margin = new System.Windows.Forms.Padding(2);
             this.stopButton.Name = "stopButton";
             this.stopButton.Size = new System.Drawing.Size(56, 32);
             this.stopButton.TabIndex = 3;
@@ -88,7 +88,7 @@
             // 
             this.listBox.FormattingEnabled = true;
             this.listBox.Location = new System.Drawing.Point(29, 83);
-            this.listBox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listBox.Margin = new System.Windows.Forms.Padding(2);
             this.listBox.Name = "listBox";
             this.listBox.Size = new System.Drawing.Size(240, 199);
             this.listBox.TabIndex = 4;
@@ -125,7 +125,7 @@
             this.Controls.Add(this.snoozeButton);
             this.Controls.Add(this.plusButton);
             this.Controls.Add(this.editButton);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Alarm501";
             this.ResumeLayout(false);
