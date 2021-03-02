@@ -54,7 +54,28 @@ namespace AlarmClock
             this.returnedMinute = dateTimePicker.Value.Minute;
             this.returnedSecond = dateTimePicker.Value.Second;
             this.snoozeTime = Convert.ToInt32(snoozeTimer.Value);
-            this.sound = (AlarmSounds)soundList.SelectedItem;
+            //this.sound = (AlarmSounds)soundList.SelectedItem;
+            var sName = soundList.SelectedItem.ToString();
+
+            switch (sName)
+            {
+                case "Radar":
+                    this.sound = AlarmSounds.Radar;
+                    break;
+                case "Beacon":
+                    this.sound = AlarmSounds.Beacon;
+                    break;
+                case "Chimes":
+                    this.sound = AlarmSounds.Chimes;
+                    break;
+                case "Reflection":
+                    this.sound = AlarmSounds.Reflection;
+                    break;
+                case "Circuit":
+                    this.sound = AlarmSounds.Circuit;
+                    break;
+            }
+
 
             if( onCheckBox.Checked == true)
             {

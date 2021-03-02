@@ -59,12 +59,13 @@ namespace AlarmClock
 
         public override string ToString()
         {
-            return targetTime.ToString("h:mm tt") + " " + enabled + " " + sound + " " + snooze;
+            return targetTime.ToString("h:mm tt");
+
         }
 
         public string getAlarmDetails()
         {
-            return targetTime.ToString();
+            return targetTime.ToString("h:mm tt") + " " + enabled + " " + sound + " " + snooze;
         }
 
 
